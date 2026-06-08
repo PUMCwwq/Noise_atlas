@@ -6,12 +6,11 @@ PBMC scRNA-seq data from 7 diseases including COVID-19, influenza, sepsis, post-
 # Pipeline
 # Healthy data processing
 To ensure cross-cohort comparability, cell-type annotations were harmonized by consolidating the original fine-grained subtypes into unified major immune cell categories, including monocytes, CD4+ T cells, CD8+ T cells, other T cells, B cells, NK cells, dendritic cells, and other cells. For each donor and each harmonized cell type, QC procedures were applied to ensure data reliability. At the cellular level, cells were retained only if they satisfied the following criteria: (i) the number of detected genes ranged from 300 to 6,000, thereby excluding low-quality cells and potential doublets. (ii) the proportion of mitochondrial gene counts was ≤ 20%, with cells exceeding this threshold removed as low-viability or apoptotic cells. At the gene level, only genes detected in at least 5 cells were retained to ensure robust expression estimation. UMI count matrices were normalized using the R package SCTransform (v0.4.1).
-# Expression-decoupled noise quantification framework
+# Expression-decoupled noise quantification framework and multi-metric calibration factor (α_total) for correction
 To distinguish biological noise from technical noise, the squared coefficient of variation (CV²) was modeled as a function of the mean expression level (μ). The observed CV² (CVobs²) was decomposed into technical (CVtech²) and biological (CVbio²) components
-# Multi-metric calibration factor (α_total) for correction and validation of correction effectiveness
-
 # Healthy baseline noise atlas analyses
-# Disease data processing
-# Disease data analysis
+Individual-level noise association with age. Pearson correlation coefficients (r) and two-sided P were calculated between age and individual-level noise separately for six cell types. The Mann-Whitney U test was used to compare individual-level noise between female and male donors within each cell type. 
+# Disease data processing and analysis
+For each donor and each harmonized cell type, QC procedures were applied as in the healthy atlas above. Raw UMI counts were normalized via SCTransform (v0.4.1). The expression-decoupled framework was employed to quantify noise, followed by batch-effect correction using multi‑metric calibration factors (α_total). After applying LOF outlier detection and retaining only individuals with good model fitting (adjusted R² > 0.3), 390 patients were remained for further analysis. The final outputs were individual‑level and gene‑level noise.
 # Interactive multi-agent system
-We developed a multi-agent noise analysis system based on the model context protocol (MCP), comprising four functional layers.
+We developed a multi-agent noise analysis system based on the model context protocol (MCP), comprising four functional layers: (i) a user interface layer for data upload, noise visualization, and interactive chat; (ii) a computation layer that performs automated noise quantification and differential analysis using the pipeline described above; (iii) a knowledge layer integrating a local vector knowledge base with external biomedical database queries via retrieval-augmented generation (RAG); and (iv) an agent layer, where a lead agent coordinates parallel domain-specific agents and a verification agent to generate a structured noise analysis report.
